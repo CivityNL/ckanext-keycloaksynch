@@ -102,11 +102,11 @@ def _get_kc_user_list(access_token, user_count):
 
 
 def _kc_usr_list_reformat(kc_user_list):
-    print 'Reformat Users form Keycloak'
+    # print 'Reformat Users form Keycloak'
     i = 0
     clean_user_list = list()
     for kc_user in kc_user_list:
-        print '{0}: Reofrmating Keycloak User {1}'.format(i, kc_user['username'])
+        # print '{0}: Reofrmating Keycloak User {1}'.format(i, kc_user['username'])
         # Get all Info from each User
         name = kc_user['username']
         if kc_user['enabled']:
@@ -134,23 +134,23 @@ def _kc_usr_list_reformat(kc_user_list):
 
 
 def _update_ckan_users_based_on_kc_user_list(context, kc_user_list):
-    print 'Make changes on CKAN based on Keycloak User list'
+    # print 'Make changes on CKAN based on Keycloak User list'
     keycloack_username_list = list()
     for kc_user in kc_user_list:
-        print 'Synchronizing Keycloak user "{0}" in CKAN'.format(kc_user['name'])
+        # print 'Synchronizing Keycloak user "{0}" in CKAN'.format(kc_user['name'])
         keycloack_username_list.append(kc_user['name'])
 
         try:
             user_dict = toolkit.get_action('user_show')(context.copy(), {'id': kc_user['name']})
             # The user exists
-            print 'user was found on CKAN'
+            # print 'user was found on CKAN'
 
             if kc_user['state'] == 'deleted':
-                print 'User is Disabled on Keycloak and therefore the CKAN user is going to be DELETED'
+                # print 'User is Disabled on Keycloak and therefore the CKAN user is going to be DELETED'
                 toolkit.get_action('user_delete')(context.copy(), {'id': kc_user['name']})
                 continue
 
-            print 'CKAN user information is going to be updated'
+            # print 'CKAN user information is going to be updated'
 
             for key, value in kc_user.items():
                 user_dict[key] = value
@@ -160,7 +160,7 @@ def _update_ckan_users_based_on_kc_user_list(context, kc_user_list):
 
         except toolkit.ObjectNotFound:
             ## ADD USER
-            print 'User was not found in CKAN, Adding it now.'
+            # print 'User was not found in CKAN, Adding it now.'
             toolkit.get_action('user_create')(context.copy(), kc_user)
     return keycloack_username_list
 
@@ -169,19 +169,19 @@ def _update_ckan_users_based_on_kc_user_list(context, kc_user_list):
 def _delete_ckan_users_not_in_kc_user_list(context, keycloack_username_list):
 
 
-    print 'Getting all CKAN Users and Delete all that are not present in Keycloak'
-    print 'keycloack_username_list = {0}'.format(keycloack_username_list)
+    # print 'Getting all CKAN Users and Delete all that are not present in Keycloak'
+    # print 'keycloack_username_list = {0}'.format(keycloack_username_list)
     ckan_user_list = toolkit.get_action('user_list')(context.copy(), {})
 
     i = 0
     for ckan_user in ckan_user_list:
-        print '{0}: Checking CKAN user "{1}" in keycloak'.format(i, ckan_user['name'])
+        # print '{0}: Checking CKAN user "{1}" in keycloak'.format(i, ckan_user['name'])
         if ckan_user['name'] == 'admingil':
             continue
 
 
         if ckan_user['name'] not in keycloack_username_list:
-            print 'User not found in Keycloak, is going to be deleted'
+            # print 'User not found in Keycloak, is going to be deleted'
             try:
                 toolkit.get_action('user_delete')(context.copy(), {'id': ckan_user['name']})
             except toolkit.NotAuthorized:
