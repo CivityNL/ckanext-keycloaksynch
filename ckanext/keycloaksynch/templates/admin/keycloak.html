@@ -1,0 +1,19 @@
+{% extends "admin/base.html" %}
+
+{% block primary_content_inner %}
+    {% link_for _('Trigger Keycloak Synchronization'), controller='ckanext.keycloaksynch.controllers.keycloak:KeycloakController', action='synch', class_='btn btn-primary', icon='fa fa-refresh' %}
+{% endblock %}
+
+{% block secondary_content %}
+  <div class="module module-narrow module-shallow">
+    <h2 class="module-heading">
+      <i class="fa fa-info-circle"></i>
+      {{ _('Keycloak Synchronization') }}
+    </h2>
+    <div class="module-content">
+      {% trans %}
+        <p>Pressing the button will synchronize Users with keycloak. Describe here all the behavior of the User Update</p>
+      {% endtrans %}
+    </div>
+  </div>
+{% endblock %}
