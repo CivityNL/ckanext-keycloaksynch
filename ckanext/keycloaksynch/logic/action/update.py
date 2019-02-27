@@ -162,6 +162,8 @@ def _update_ckan_users_based_on_kc_user_list(context, kc_user_list):
             ## ADD USER
             # print 'User was not found in CKAN, Adding it now.'
             toolkit.get_action('user_create')(context.copy(), kc_user)
+        except Exception:
+            continue
     return keycloack_username_list
 
 
