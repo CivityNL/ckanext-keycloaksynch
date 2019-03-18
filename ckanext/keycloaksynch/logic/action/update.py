@@ -97,6 +97,7 @@ def _get_kc_user_list(access_token, user_count):
     }
     response = requests.request("GET", url, data=payload, headers=headers,
                                 params=querystring)
+    log.info('response.text BEFORE CRASH = {0}'.format(response.text))
     kc_user_list = json.loads(response.text)
     return _kc_usr_list_reformat(kc_user_list)
 
