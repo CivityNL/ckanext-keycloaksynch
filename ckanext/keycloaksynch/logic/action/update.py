@@ -78,18 +78,18 @@ def _get_admin_kc_access_token():
 def _get_total_count_kc_users(access_token):
     # GET the total count of Users
     payload = "grant_type=client_credentials"
-    url = "https://acc-datadenhaag.dataplatform.nl/auth/admin/realms/Data-Catalog/users/count"
+    url = "https://catalogusdenhaag.dataplatform.nl/auth/admin/realms/Data-Catalog/users/count"
     headers = {
         'Authorization': "Bearer {0}".format(access_token)
     }
     response = requests.request("GET", url, data=payload, headers=headers)
-    # user_count = json.loads(response.text)
-    return response.text
+    user_count = json.loads(response.text)
+    return user_count
 
 
 def _get_kc_user_list(access_token, user_count):
     # GET the list of users from Keycloak
-    url = "https://acc-datadenhaag.dataplatform.nl/auth/admin/realms/Data-Catalog/users"
+    url = "https://catalogusdenhaag.dataplatform.nl/auth/admin/realms/Data-Catalog/users"
     querystring = {"max": str(user_count)}
     payload = ""
     headers = {
@@ -97,7 +97,6 @@ def _get_kc_user_list(access_token, user_count):
     }
     response = requests.request("GET", url, data=payload, headers=headers,
                                 params=querystring)
-    log.info('response.text BEFORE CRASH = {0}'.format(response.text))
     kc_user_list = json.loads(response.text)
     return _kc_usr_list_reformat(kc_user_list)
 
