@@ -83,8 +83,8 @@ def _get_total_count_kc_users(access_token):
         'Authorization': "Bearer {0}".format(access_token)
     }
     response = requests.request("GET", url, data=payload, headers=headers)
-    user_count = json.loads(response.text)
-    return user_count
+    # user_count = json.loads(response.text)
+    return response.text
 
 
 def _get_kc_user_list(access_token, user_count):
