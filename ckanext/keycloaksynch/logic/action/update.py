@@ -136,9 +136,6 @@ def _kc_usr_list_reformat(kc_user_list):
 def _update_ckan_users_based_on_kc_user_list(context, kc_user_list):
     # print 'Make changes on CKAN based on Keycloak User list'
     keycloack_username_list = list()
-    for kc_user in kc_user_list:
-        log.info('Synchronizing Keycloak user "{0}" in CKAN'.format(
-            kc_user['name']))
 
     for kc_user in kc_user_list:
         log.info('Synchronizing Keycloak user "{0}" in CKAN'.format(kc_user['name']))
