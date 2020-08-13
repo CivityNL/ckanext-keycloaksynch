@@ -17,9 +17,8 @@ class KeycloakController(base.BaseController):
         context = {'model': model, 'session': model.Session,
                    'user': toolkit.c.user, 'auth_user_obj': toolkit.c.userobj}
 
-        log.info('Calling Action')
-        toolkit.get_action('keycloak_synch')(context, {})
-        log.info('Rendering the page again')
-        toolkit.h.flash_success('Synchronization Finished Sucessfully.')
+        toolkit.get_action('users_keycloak_synch')(context, {})
+
+        toolkit.h.flash_success('Synchronization Triggered.')
 
         return toolkit.redirect_to('admin_keycloak')
