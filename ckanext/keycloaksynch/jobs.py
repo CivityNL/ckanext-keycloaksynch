@@ -64,6 +64,7 @@ def user_exists_in_ckan(context, user_name_or_id):
 
 def update_user(context, kc_user):
     log.info('Updating User')
+    context['ignore_auth'] = True
 
     user_dict = tk.get_action('user_show')(None, {'id': kc_user['username']})
 
