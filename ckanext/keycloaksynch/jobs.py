@@ -69,7 +69,7 @@ def update_user(context, kc_user):
     log.info('Updating User')
     context['ignore_auth'] = True
 
-    user_dict = tk.get_action('user_show')(None, {'id': kc_user['username']})
+    user_dict = tk.get_action('user_show')(context, {'id': kc_user['username']})
 
     user_dict['email'] = kc_user['email']
     user_dict['fullname'] = kc_user['firstName'] + ' ' + kc_user['lastName']
