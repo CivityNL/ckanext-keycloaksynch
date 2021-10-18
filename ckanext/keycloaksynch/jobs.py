@@ -36,9 +36,10 @@ def upsert_users_from_keycloak(context, kc_users):
 
 def delete_ckan_users_from_keycloak(context, kc_users):
     log.info('Deleting Users from CKAN')
+    context['ignore_auth'] = True
 
     protected_users = tk.config.get(const.PROTECTED_USERS, '').split()
-    ckan_users = tk.get_action('user_list')(None, {})
+    ckan_users = tk.get_action('user_list')(context, {})
 
     for ckan_user in ckan_users:
         log.info('Handling CKAN User: {}'.format(ckan_user['name']))
