@@ -26,9 +26,17 @@ def upsert_users_from_keycloak(context, kc_users):
         if not kc_user['enabled']:
             continue
         if user_exists_in_ckan(context, kc_user['username']):
-            update_user(context.copy(), kc_user)
+            try:
+                update_user(context.copy(), kc_user)
+            except tk.ValidationError as ex:
+                log.info(ex.message)
+                pass
         else:
-            create_user(context.copy(), kc_user)
+            try:
+                create_user(context.copy(), kc_user)
+            except tk.ValidationError as ex:
+                log.info(ex.message)
+                pass
 
 
 def delete_ckan_users_from_keycloak(context, kc_users):
