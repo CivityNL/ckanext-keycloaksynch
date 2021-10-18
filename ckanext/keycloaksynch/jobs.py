@@ -24,10 +24,10 @@ def upsert_users_from_keycloak(context, kc_users):
         log.info('Handling Keycloak User: {}'.format(kc_user['username']))
         if not kc_user['enabled']:
             continue
-        else:
-            if not kc_user['email'] or not kc_user['username']:
-                log.info('User is missing either Username or Email.')
-                continue
+        if not kc_user['username']:
+            continue
+        if not kc_user['email']:
+            continue
         if user_exists_in_ckan(context, kc_user['username']):
             update_user(context.copy(), kc_user)
         else:
