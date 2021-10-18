@@ -70,13 +70,12 @@ def update_user(context, kc_user):
     user_dict['email'] = kc_user['email']
     user_dict['fullname'] = kc_user['firstName'] + ' ' + kc_user['lastName']
     user_dict['state'] = 'active'
-
+    log.info('will I survive')
     try:
         tk.get_action('user_update')(context, user_dict)
-    except Exception as ex:
-        log.info(ex.message)
+    except tk.ValidationError as ex:
         pass
-
+    log.info('I survived')
 
 def create_user(context, kc_user):
     log.info('Creating User')
