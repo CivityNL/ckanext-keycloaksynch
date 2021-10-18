@@ -9,7 +9,6 @@ log = logging.getLogger(__name__)
 
 
 def users_keycloak_synch():
-
     context = {'model': model, 'session': model.Session, 'ignore_auth': True}
 
     kc_users = kc.get_users()
@@ -26,17 +25,9 @@ def upsert_users_from_keycloak(context, kc_users):
         if not kc_user['enabled']:
             continue
         if user_exists_in_ckan(context, kc_user['username']):
-            try:
-                update_user(context.copy(), kc_user)
-            except tk.ValidationError as ex:
-                log.info(ex.message)
-                pass
+            update_user(context.copy(), kc_user)
         else:
-            try:
-                create_user(context.copy(), kc_user)
-            except tk.ValidationError as ex:
-                log.info(ex.message)
-                pass
+            create_user(context.copy(), kc_user)
 
 
 def delete_ckan_users_from_keycloak(context, kc_users):
@@ -80,7 +71,11 @@ def update_user(context, kc_user):
     user_dict['fullname'] = kc_user['firstName'] + ' ' + kc_user['lastName']
     user_dict['state'] = 'active'
 
-    tk.get_action('user_update')(context, user_dict)
+    try:
+        tk.get_action('user_update')(context, user_dict)
+    except Exception as ex:
+        log.info(ex.message)
+        pass
 
 
 def create_user(context, kc_user):
