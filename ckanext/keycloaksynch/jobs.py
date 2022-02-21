@@ -17,6 +17,8 @@ def users_keycloak_synch():
 
     delete_ckan_users_from_keycloak(context, kc_users)
 
+    populate_keycloak_with_deleted_ckan_users(context)
+
 
 def upsert_users_from_keycloak(context, kc_users):
     log.info('Upserting Users from Keycloak')
@@ -80,6 +82,7 @@ def update_user(context, kc_user):
     except tk.ValidationError as ex:
         pass
 
+
 def create_user(context, kc_user):
     log.info('Creating User')
 
@@ -93,3 +96,28 @@ def create_user(context, kc_user):
     }
 
     tk.get_action('user_create')(context, user_dict)
+
+
+def _convert_ckan_user_to_kc_user(ckan_user_dict):
+    kc_user_dict = {
+        "firstName": ckan_user_dict['fullname'],
+        "email": ckan_user_dict['email'],
+        "emailVerified": True,
+        "enabled": False,
+        "username": ckan_user_dict['name']
+    }
+    return kc_user_dict
+
+
+def populate_keycloak_with_deleted_ckan_users(context):
+    log.info('populate_keycloak_with_deleted_ckan_users')
+    context['ignore_auth'] = True
+
+    deleted_ckan_users = tk.get_action('deleted_user_list')(context, {})
+
+    for username in deleted_ckan_users:
+        log.info('Creating deleted user {} in Keycloak'.format(username))
+        user_dict = tk.get_action('user_show')(context, {'id': username})
+        kc_user_dict = _convert_ckan_user_to_kc_user(user_dict)
+        kc.user_upsert(kc_user_dict)
+
