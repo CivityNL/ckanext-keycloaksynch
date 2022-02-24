@@ -74,8 +74,8 @@ def update_user(context, kc_user):
 
     user_dict = tk.get_action('user_show')(context, {'id': kc_user['username']})
 
-    user_dict['email'] = kc_user['email']
-    user_dict['fullname'] = kc_user['firstName'] + ' ' + kc_user['lastName']
+    user_dict['email'] = kc_user.get('email', '')
+    user_dict['fullname'] = kc_user.get('firstName', '') + ' ' + kc_user.get('lastName', '')
     user_dict['state'] = 'active'
     try:
         tk.get_action('user_update')(context, user_dict)
@@ -86,11 +86,11 @@ def update_user(context, kc_user):
 def create_user(context, kc_user):
     log.info('Creating User')
 
-    fullname = kc_user['firstName'] + ' ' + kc_user['lastName']
+    fullname = kc_user.get('firstName', '') + ' ' + kc_user.get('lastName', '')
 
     user_dict = {
-        'name': kc_user['username'],
-        'email': kc_user['email'],
+        'name': kc_user.get('username', ''),
+        'email': kc_user.get('email', ''),
         'fullname': fullname,
         'password': tk.config.get(const.DEFAULT_PASSWORD, 'password')
     }
@@ -120,4 +120,3 @@ def populate_keycloak_with_deleted_ckan_users(context):
         user_dict = tk.get_action('user_show')(context, {'id': username})
         kc_user_dict = _convert_ckan_user_to_kc_user(user_dict)
         kc.user_upsert(kc_user_dict)
-
