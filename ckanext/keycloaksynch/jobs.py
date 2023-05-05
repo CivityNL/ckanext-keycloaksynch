@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 
 
 def users_keycloak_synch():
-    context = {'model': model, 'session': model.Session, 'ignore_auth': True}
+    context = {'model': model, 'session': model.Session, 'ignore_auth': True, 'user': None}
 
     kc_users = kc.get_users()
 
